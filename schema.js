@@ -86,6 +86,16 @@ const Event = new GraphQLObjectType({
   }
 });
 
+const Price = new GraphQLObjectType({
+  name: "Price",
+  fields: {
+    display: { type: GraphQLString },
+    currency: { type: GraphQLString },
+    value: { type: GraphQLInt },
+    major_value: { type: GraphQLString },
+  }
+});
+
 const Order = new GraphQLObjectType({
   name: "Order",
   fields: {
@@ -97,12 +107,31 @@ const Order = new GraphQLObjectType({
     email: { type: GraphQLString },
     status: { type: GraphQLString },
     event: { type: Event },
+    costs: { type: new GraphQLObjectType({
+      name: "Costs",
+      fields: {
+        base_price: { type: Price },
+        eventbrite_fee: { type: Price },
+        gross: { type: Price },
+        payment_fee: { type: Price },
+        tax: { type: Price },
+      }
+    })}
   }
 });
 
 const Query = new GraphQLObjectType({
   name: "Query",
   fields: {
+    event: {
+      type: Event,
+      args: {
+        id: { type: GraphQLID },
+      },
+      resolve: (rawSearch, args, context, ast) => {
+        return fetchEB(`/events/${args.id}/`, args, context, ast)
+      }
+    },
     events: {
       type: new GraphQLList(Event),
       args: {
