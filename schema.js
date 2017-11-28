@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const graphqlFields = require('graphql-fields');
 
 const {
+  GraphQLBoolean,
   GraphQLID,
   GraphQLInt,
   GraphQLList,
@@ -14,7 +15,7 @@ const fetchEB = (path, args, context, ast) => {
   let query = graphqlFields(ast);
 
   let expansions = [];
-  ['organizer', 'venue', 'event'].forEach((expansion) => {
+  ['organizer', 'venue', 'event', 'attendees'].forEach((expansion) => {
     if (query.hasOwnProperty(expansion)) {
       expansions.push(expansion);
     }
@@ -96,6 +97,18 @@ const Price = new GraphQLObjectType({
   }
 });
 
+const Attendee = new GraphQLObjectType({
+  name: "Attendee",
+  fields: {
+    id: { type: GraphQLID },
+    quantity: { type: GraphQLInt },
+    checked_in: { type: GraphQLBoolean },
+    event: { type: Event },
+    ticket_class_name: { type: GraphQLString },
+    team: { type: GraphQLString },
+  }
+});
+
 const Order = new GraphQLObjectType({
   name: "Order",
   fields: {
@@ -107,6 +120,7 @@ const Order = new GraphQLObjectType({
     email: { type: GraphQLString },
     status: { type: GraphQLString },
     event: { type: Event },
+    attendees: { type: new GraphQLList(Attendee) },
     costs: { type: new GraphQLObjectType({
       name: "Costs",
       fields: {
