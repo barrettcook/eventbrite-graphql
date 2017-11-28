@@ -10,6 +10,24 @@ const {
   GraphQLString
 } = require("graphql");
 
+const fetchEB = (path, args, context, ast) => {
+  let query = graphqlFields(ast);
+
+  let expansions = [];
+  ['organizer', 'venue', 'event'].forEach((expansion) => {
+    if (query.hasOwnProperty(expansion)) {
+      expansions.push(expansion);
+    }
+  });
+
+  let page = args.page || "";
+  let expand = expansions.join(',');
+  let url = `https://www.eventbriteapi.com/v3${path}?token=${context.token}&page=${page}&expand=${expand}`;
+  console.log(url);
+  return fetch(url)
+    .then(resp => resp.json())
+};
+
 const TextAndHtml = new GraphQLObjectType({
   name: "TextAndHtml",
   fields: {
@@ -68,8 +86,22 @@ const Event = new GraphQLObjectType({
   }
 });
 
-const Search = new GraphQLObjectType({
-  name: "Search",
+const Order = new GraphQLObjectType({
+  name: "Order",
+  fields: {
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    first_name: { type: GraphQLString },
+    last_name: { type: GraphQLString },
+    last_name: { type: GraphQLString },
+    email: { type: GraphQLString },
+    status: { type: GraphQLString },
+    event: { type: Event },
+  }
+});
+
+const Query = new GraphQLObjectType({
+  name: "Query",
   fields: {
     events: {
       type: new GraphQLList(Event),
@@ -77,26 +109,23 @@ const Search = new GraphQLObjectType({
         page: { type: GraphQLInt }
       },
       resolve: (rawSearch, args, context, ast) => {
-        let query = graphqlFields(ast);
-
-        let expansions = [];
-        ['organizer', 'venue'].forEach((expansion) => {
-          if (query.hasOwnProperty(expansion)) {
-            expansions.push(expansion);
-          }
-        });
-
-        let expand = expansions.join(',');
-        let url = `https://www.eventbrite.com/api/v3/events/search/?token=${context.token}&page=${args.page}&expand=${expand}`;
-        console.log(url);
-        return fetch(url)
-          .then(resp => resp.json())
+        return fetchEB('/events/search/', args, context, ast)
           .then(json => json.events);
+      }
+    },
+    orders: {
+      type: new GraphQLList(Order),
+      args: {
+        page: { type: GraphQLInt }
+      },
+      resolve: (rawSearch, args, context, ast) => {
+        return fetchEB('/users/me/orders/', args, context, ast)
+          .then(json => json.orders);
       }
     }
   }
 });
 
 module.exports = new GraphQLSchema({
-  query: Search
+  query: Query
 });
