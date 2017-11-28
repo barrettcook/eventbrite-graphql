@@ -7,16 +7,12 @@ const PORT = 5000;
 
 app.use(cors());
 
-app.use(graphqlHttp({
+app.use('/:token/', graphqlHttp({
   schema,
   // Pretty Print the JSON response
   pretty: true,
   // Enable GraphiQL dev tool
   graphiql: true,
-
-  context: {
-    token: process.env.TOKEN
-  }
 }));
 
 app.listen(PORT, () => {
