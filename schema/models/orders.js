@@ -58,14 +58,16 @@ const Order = new GraphQLObjectType({
 });
 
 module.exports = {
-  orders: {
-    type: new GraphQLList(Order),
-    args: {
-      page: { type: GraphQLInt }
-    },
-    resolve: (rawSearch, args, context, ast) => {
-      return fetchEB('/users/me/orders/', args, context, ast)
-        .then(json => json.orders);
+  query: {
+    orders: {
+      type: new GraphQLList(Order),
+      args: {
+        page: { type: GraphQLInt }
+      },
+      resolve: (rawSearch, args, context, ast) => {
+        return fetchEB('/users/me/orders/', args, context, ast)
+          .then(json => json.orders);
+      }
     }
   }
 };

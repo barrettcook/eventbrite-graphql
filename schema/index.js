@@ -11,7 +11,7 @@ const query = new GraphQLObjectType({
   name: "Query",
   fields: {
     ...events.query,
-    ...orders
+    ...orders.query,
   }
 });
 

@@ -48,7 +48,7 @@ const Logo = new GraphQLObjectType({
 
 const Organizer = new GraphQLObjectType({
   name: "Organizer",
-  fields: {
+  fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: TextAndHtml },
@@ -63,7 +63,17 @@ const Organizer = new GraphQLObjectType({
     num_past_events: { type: GraphQLInt },
     num_future_events: { type: GraphQLInt },
     logo: { type: Logo },
-  }
+    events: {
+      type: new GraphQLList(Event),
+      args: {
+        page: { type: GraphQLInt }
+      },
+      resolve: (rawOrganizer, args, context, ast) => {
+        return fetchEB(`/organizers/${rawOrganizer.id}/events/`, args, context, ast)
+          .then(json => json.events);
+      }
+    }
+  })
 });
 
 const Venue = new GraphQLObjectType({
@@ -147,6 +157,7 @@ const Event = new GraphQLObjectType({
 
 module.exports = {
   Event,
+  Organizer,
   query: {
     event: {
       type: Event,
@@ -166,6 +177,16 @@ module.exports = {
       resolve: (rawSearch, args, context, ast) => {
         return fetchEB('/events/search/', args, context, ast)
           .then(json => json.events);
+      }
+    },
+
+    organizer: {
+      type: Organizer,
+      args: {
+        id: { type: GraphQLID },
+      },
+      resolve: (rawSearch, args, context, ast) => {
+        return fetchEB(`/organizers/${args.id}/`, args, context, ast)
       }
     }
   }
