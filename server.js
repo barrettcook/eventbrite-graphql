@@ -1,6 +1,6 @@
 const cors = require('cors');
 const graphqlHttp = require("express-graphql");
-const schema = require("./schema.js");
+const schema = require("./schema");
 
 const app = require("express")();
 const PORT = 5000;

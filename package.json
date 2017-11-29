@@ -2,9 +2,9 @@
   "name": "eventbrite-graphql",
   "version": "1.0.0",
   "description": "Eventbrite API GraphQL",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon server.js"
   },
   "author": "Barrett Cook",
   "license": "MIT",
