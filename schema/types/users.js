@@ -28,6 +28,8 @@ const User = new GraphQLObjectType({
     is_public: { type: GraphQLBoolean },
     image_id: { type: GraphQLString },
     orders: require('../queries/userOrders'),
+    organizers: require('../queries/userOrganizers'),
+    owned_events: require('../queries/userOwnedEvents'),
   })
 });
 
