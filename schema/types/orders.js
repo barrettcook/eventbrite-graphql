@@ -8,7 +8,7 @@ const {
 } = require("graphql");
 const fetchEB = require('../fetchEB');
 
-const events = require('./events');
+const Event = require('./events').Event;
 
 const Price = new GraphQLObjectType({
   name: "Price",
@@ -26,7 +26,7 @@ const Attendee = new GraphQLObjectType({
     id: { type: GraphQLID },
     quantity: { type: GraphQLInt },
     checked_in: { type: GraphQLBoolean },
-    event: { type: events.Event },
+    event: { type: Event },
     ticket_class_name: { type: GraphQLString },
     team: { type: GraphQLString },
   }
@@ -34,15 +34,16 @@ const Attendee = new GraphQLObjectType({
 
 const Order = new GraphQLObjectType({
   name: "Order",
-  fields: {
+  fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
+    event_id: { type: GraphQLString },
     first_name: { type: GraphQLString },
     last_name: { type: GraphQLString },
     last_name: { type: GraphQLString },
     email: { type: GraphQLString },
     status: { type: GraphQLString },
-    event: { type: events.Event },
+    event: { type: Event },
     attendees: { type: new GraphQLList(Attendee) },
     costs: { type: new GraphQLObjectType({
       name: "Costs",
@@ -54,10 +55,11 @@ const Order = new GraphQLObjectType({
         tax: { type: Price },
       }
     })}
-  }
+  })
 });
 
 module.exports = {
+  Order,
   query: {
     orders: {
       type: new GraphQLList(Order),

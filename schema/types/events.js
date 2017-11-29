@@ -4,6 +4,7 @@ const {
   GraphQLID,
   GraphQLInt,
   GraphQLList,
+  GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString
 } = require("graphql");
@@ -63,16 +64,7 @@ const Organizer = new GraphQLObjectType({
     num_past_events: { type: GraphQLInt },
     num_future_events: { type: GraphQLInt },
     logo: { type: Logo },
-    events: {
-      type: new GraphQLList(Event),
-      args: {
-        page: { type: GraphQLInt }
-      },
-      resolve: (rawOrganizer, args, context, ast) => {
-        return fetchEB(`/organizers/${rawOrganizer.id}/events/`, args, context, ast)
-          .then(json => json.events);
-      }
-    }
+    events: require('../queries/organizerEvents'),
   })
 });
 
@@ -183,7 +175,7 @@ module.exports = {
     organizer: {
       type: Organizer,
       args: {
-        id: { type: GraphQLID },
+        id: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve: (rawSearch, args, context, ast) => {
         return fetchEB(`/organizers/${args.id}/`, args, context, ast)
