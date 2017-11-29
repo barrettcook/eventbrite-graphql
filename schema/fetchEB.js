@@ -5,7 +5,7 @@ const fetchEB = (path, args, context, ast) => {
   let query = graphqlFields(ast);
 
   let expansions = [];
-  ['organizer', 'venue', 'event', 'attendees'].forEach((expansion) => {
+  ['organizer', 'venue', 'event', 'attendees', 'category', 'subcategory', 'format'].forEach((expansion) => {
     if (query.hasOwnProperty(expansion)) {
       expansions.push(expansion);
     }

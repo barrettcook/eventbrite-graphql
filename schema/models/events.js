@@ -1,4 +1,6 @@
 const {
+  GraphQLBoolean,
+  GraphQLFloat,
   GraphQLID,
   GraphQLInt,
   GraphQLList,
@@ -24,6 +26,26 @@ const DateTime = new GraphQLObjectType({
   }
 });
 
+const Logo = new GraphQLObjectType({
+  name: "Logo",
+  fields: {
+    id: { type: GraphQLID },
+    url: { type: GraphQLString },
+    crop_mask: { type: GraphQLString },
+    original: { type: new GraphQLObjectType({
+      name: "Original",
+      fields: {
+        url: { type: GraphQLString },
+        width: { type: GraphQLInt },
+        height: { type: GraphQLInt },
+      }
+    })},
+    aspect_ratio: { type: GraphQLFloat },
+    edge_color: { type: GraphQLString },
+    edge_color_set: { type: GraphQLBoolean },
+  }
+});
+
 const Organizer = new GraphQLObjectType({
   name: "Organizer",
   fields: {
@@ -31,12 +53,16 @@ const Organizer = new GraphQLObjectType({
     name: { type: GraphQLString },
     description: { type: TextAndHtml },
     long_description: { type: TextAndHtml },
+    resource_uri: { type: GraphQLString },
     website: { type: GraphQLString },
+    url: { type: GraphQLString },
+    vanity_url: { type: GraphQLString },
     twitter: { type: GraphQLString },
     facebook: { type: GraphQLString },
     instagram: { type: GraphQLString },
     num_past_events: { type: GraphQLInt },
     num_future_events: { type: GraphQLInt },
+    logo: { type: Logo },
   }
 });
 
@@ -45,6 +71,37 @@ const Venue = new GraphQLObjectType({
   fields: {
     id: { type: GraphQLID },
     name: { type: GraphQLString },
+    address: { type: new GraphQLObjectType({
+      name: "Address",
+      fields: {
+        address_1: { type: GraphQLString },
+        address_2: { type: GraphQLString },
+        city: { type: GraphQLString },
+        region: { type: GraphQLString },
+        postal_code: { type: GraphQLString },
+        country: { type: GraphQLString },
+        latitude: { type: GraphQLFloat },
+        longitude: { type: GraphQLFloat },
+        localized_address_display: { type: GraphQLString },
+        localized_area_display: { type: GraphQLString },
+        localized_multi_line_address_display: { type: new GraphQLList(GraphQLString) },
+      }
+    })},
+    latitude: { type: GraphQLFloat },
+    longitude: { type: GraphQLFloat },
+    resource_uri: { type: GraphQLString },
+  }
+});
+
+const Category = new GraphQLObjectType({
+  name: "Category",
+  fields: {
+    id: { type: GraphQLID },
+    resource_uri: { type: GraphQLString },
+    name: { type: GraphQLString },
+    name_localized: { type: GraphQLString },
+    short_name: { type: GraphQLString },
+    short_name_localized: { type: GraphQLString },
   }
 });
 
@@ -60,6 +117,29 @@ const Event = new GraphQLObjectType({
     capacity: { type: GraphQLInt },
     status: { type: GraphQLString },
     currency: { type: GraphQLString },
+    created: { type: GraphQLString },
+    changed: { type: GraphQLString },
+    capacity_is_custom: { type: GraphQLBoolean },
+    listed: { type: GraphQLBoolean },
+    shareable: { type: GraphQLBoolean },
+    online_event: { type: GraphQLBoolean },
+    tx_time_limit: { type: GraphQLInt },
+    hide_start_date: { type: GraphQLBoolean },
+    hide_end_date: { type: GraphQLBoolean },
+    locale: { type: GraphQLString },
+    is_locked: { type: GraphQLBoolean },
+    privacy_setting: { type: GraphQLString },
+    is_series: { type: GraphQLBoolean },
+    is_series_parent: { type: GraphQLBoolean },
+    is_reserved_seating: { type: GraphQLBoolean },
+    source: { type: GraphQLString },
+    is_free: { type: GraphQLBoolean },
+    version: { type: GraphQLString },
+    resource_uri: { type: GraphQLString },
+    category: { type: Category },
+    subcategory: { type: Category },
+    format: { type: Category },
+    logo: { type: Logo },
     organizer: { type: Organizer },
     venue: { type: Venue },
   }
