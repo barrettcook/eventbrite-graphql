@@ -3,9 +3,6 @@ const graphqlFields = require('graphql-fields');
 
 const fetchEB = (path, args, context, ast) => {
   let query = graphqlFields(ast);
-  
-
-  console.log(query)
 
   let expansions = [];
   [
@@ -25,8 +22,12 @@ const fetchEB = (path, args, context, ast) => {
 
   let page = args.page || "";
   let expand = expansions.join(',');
-  let url = `https://www.eventbriteapi.com/v3${path}?token=${context.params.token}&page=${page}&expand=${expand}`;
+  let filters = args.filters;
+
+  let url = `https://www.eventbriteapi.com/v3${path}?${filters}&token=${context.params.token}&page=${page}&expand=${expand}`;
+  
   console.log(url);
+  
   return fetch(url)
     .then(resp => resp.json())
 };
