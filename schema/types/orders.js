@@ -40,7 +40,6 @@ const Order = new GraphQLObjectType({
     event_id: { type: GraphQLString },
     first_name: { type: GraphQLString },
     last_name: { type: GraphQLString },
-    last_name: { type: GraphQLString },
     email: { type: GraphQLString },
     status: { type: GraphQLString },
     event: { type: Event },
