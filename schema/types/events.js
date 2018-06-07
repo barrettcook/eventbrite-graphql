@@ -110,13 +110,6 @@ const Category = new GraphQLObjectType({
     },
 });
 
-const CategoryFilter = new GraphQLInputObjectType({
-    name: 'CategoryFilter',
-    fields: {
-        id: {type: GraphQLString},
-    },
-});
-
 const Cost = new GraphQLObjectType({
     name: 'Cost',
     fields: {
@@ -135,20 +128,13 @@ const TicketClass = new GraphQLObjectType({
     },
 });
 
-const Location = new GraphQLInputObjectType({
-    name: 'Location',
-    fields: {
-        address: {type: GraphQLString},
-    },
-});
-
 const EventFilters = new GraphQLInputObjectType({
     name: 'EventFilters',
     fields: {
-        location: {type: Location},
+        location: {type: GraphQLString},
         start: {type: GraphQLString},
         end: {type: GraphQLString},
-        categories: {type: CategoryFilter},
+        categories: {type: GraphQLString},
     },
 });
 
@@ -214,8 +200,8 @@ module.exports = {
                 filters: {type: EventFilters},
             },
             resolve: (rawSearch, args, context, ast) => {
-                args.filters['location.address'] = args.filters.location.address;
-                args.filters['categories'] = args.filters.categories.id;
+                args.filters['location.address'] = args.filters.location;
+                args.filters['categories'] = args.filters.categories;
                 delete args.filters.location;
                 args.filters = queryString.stringify(args.filters);
 
