@@ -107,6 +107,25 @@ const Category = new GraphQLObjectType({
   }
 });
 
+const Cost = new GraphQLObjectType({
+  name: "Cost",
+  fields: {
+    currency: { type: GraphQLString },
+    value: { type: GraphQLString },
+    display: { type: GraphQLString },
+  }
+});
+
+const TicketClass = new GraphQLObjectType({
+  name: "TicketClass",
+  fields: {
+    name: { type: GraphQLString },
+    cost: { type: Cost },
+    description: { type: GraphQLString },
+  }
+})
+
+
 const Event = new GraphQLObjectType({
   name: "Event",
   fields: {
@@ -144,6 +163,9 @@ const Event = new GraphQLObjectType({
     logo: { type: Logo },
     organizer: { type: Organizer },
     venue: { type: Venue },
+    ticket_classes: { 
+      type: new GraphQLList(TicketClass),  
+    }
   }
 });
 

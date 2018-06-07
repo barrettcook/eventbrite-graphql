@@ -3,10 +3,22 @@ const graphqlFields = require('graphql-fields');
 
 const fetchEB = (path, args, context, ast) => {
   let query = graphqlFields(ast);
+  
+
+  console.log(query)
 
   let expansions = [];
-  ['organizer', 'venue', 'event', 'attendees', 'category', 'subcategory', 'format'].forEach((expansion) => {
-    if (query.hasOwnProperty(expansion)) {
+  [
+    'organizer', 
+    'venue', 
+    'event', 
+    'attendees', 
+    'category', 
+    'subcategory', 
+    'format', 
+    'ticket_classes'
+  ].forEach((expansion) => {
+    if (query.hasOwnProperty(expansion)) {  
       expansions.push(expansion);
     }
   });
