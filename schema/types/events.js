@@ -200,10 +200,12 @@ module.exports = {
                 filters: {type: EventFilters},
             },
             resolve: (rawSearch, args, context, ast) => {
-                args.filters['location.address'] = args.filters.location;
-                args.filters['categories'] = args.filters.categories;
-                delete args.filters.location;
-                args.filters = queryString.stringify(args.filters);
+                if (args.filters) {
+                    args.filters['location.address'] = args.filters.location;
+                    args.filters['categories'] = args.filters.categories;
+                    delete args.filters.location;
+                    args.filters = queryString.stringify(args.filters);
+                }
 
                 return fetchEB('/events/search/', args, context, ast)
                 .then((json) => json.events);
