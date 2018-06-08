@@ -177,7 +177,8 @@ const Event = new GraphQLObjectType({
         venue: {type: Venue},
         ticket_classes: { 
           type: new GraphQLList(TicketClass),  
-      },
+        },
+        performances: require('../resolvers/performances'),
     },
 });
 
@@ -191,7 +192,7 @@ module.exports = {
             id: {type: GraphQLID},
         },
           resolve: (rawSearch, args, context, ast) => fetchEB(`/events/${args.id}/`, args, context, ast),
-      },
+        },
 
         events: {
             type: new GraphQLList(Event),
@@ -204,6 +205,10 @@ module.exports = {
                     args.filters['location.address'] = args.filters.location;
                     args.filters['categories'] = args.filters.categories;
                     delete args.filters.location;
+                    args.filters['start_date.range_start'] = Number(args.filters.start);
+                    args.filters['start_date.range_end'] = Number(args.filters.end);
+                    delete args.filters.start;
+                    delete args.filters.end;
                 }
                 args.filters = queryString.stringify(args.filters);
 

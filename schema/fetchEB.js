@@ -22,9 +22,9 @@ const fetchEB = (path, args, context, ast) => {
 
   let page = args.page || "";
   let expand = expansions.join(',');
-  let filters = args.filters;
+  let filters = args.filters || '';
 
-  let url = `https://www.eventbriteapi.com/v3${path}?${filters}&token=${context.params.token}&page=${page}&expand=${expand}`;
+  let url = `https://www.evbqaapi.com/v3${path}?${filters}&token=${context.params.token}&page=${page}&expand=${expand}`;
   
   console.log(url);
   
