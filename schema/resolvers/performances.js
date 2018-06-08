@@ -7,22 +7,20 @@ const {
 
   const fetchEB = require('../fetchEB');
   
-const Performance = new GraphQLObjectType({
-    name: "Performance",
-    fields: {
-        // artists: { 
-        //     type: new GraphQLList(TicketClass),
-        // },
-        event_id: { type: GraphQLString }
-    }
-});
-
 const Artist = new GraphQLObjectType({
     name: "Artist",
     fields: {
-    name: { type: GraphQLString }
+        name: { type: GraphQLString }
     }
 });
+
+const Performance = new GraphQLObjectType({
+    name: "Performance",
+    fields: {
+        display_name: { type: GraphQLString }
+    }
+});
+
 
 module.exports = {
 type: new GraphQLList(Performance),
@@ -31,6 +29,6 @@ args: {
 },
 resolve: (event, args, context, ast) => {
     return fetchEB(`/events/${event.id}/performances/`, args, context, ast)
-    .then(json => json.events);
+    .then(json => json.performances);
 }
 };

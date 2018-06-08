@@ -205,8 +205,8 @@ module.exports = {
                     args.filters['location.address'] = args.filters.location;
                     args.filters['categories'] = args.filters.categories;
                     delete args.filters.location;
-                    args.filters['start_date.range_start'] = Number(args.filters.start);
-                    args.filters['start_date.range_end'] = Number(args.filters.end);
+                    args.filters['start_date.range_start'] = args.filters.start;
+                    args.filters['start_date.range_end'] = args.filters.end;
                     delete args.filters.start;
                     delete args.filters.end;
                 }
