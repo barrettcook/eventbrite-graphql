@@ -5,16 +5,29 @@ const fetchEB = (path, args, context, ast) => {
   let query = graphqlFields(ast);
 
   let expansions = [];
-  ['organizer', 'venue', 'event', 'attendees', 'category', 'subcategory', 'format'].forEach((expansion) => {
-    if (query.hasOwnProperty(expansion)) {
+  [
+    'organizer', 
+    'venue', 
+    'event', 
+    'attendees', 
+    'category', 
+    'subcategory', 
+    'format', 
+    'ticket_classes'
+  ].forEach((expansion) => {
+    if (query.hasOwnProperty(expansion)) {  
       expansions.push(expansion);
     }
   });
 
   let page = args.page || "";
   let expand = expansions.join(',');
-  let url = `https://www.eventbriteapi.com/v3${path}?token=${context.params.token}&page=${page}&expand=${expand}`;
+  let filters = args.filters || '';
+
+  let url = `https://www.evbqaapi.com/v3${path}?${filters}&token=${context.params.token}&page=${page}&expand=${expand}`;
+  
   console.log(url);
+  
   return fetch(url)
     .then(resp => resp.json())
 };
